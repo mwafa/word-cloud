@@ -2,6 +2,8 @@
 
 Program python untuk menyimpan data word cloud.
 
+![](templates/sample.png)
+
 ## Install Library
 
 ```bash
