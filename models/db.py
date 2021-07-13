@@ -10,7 +10,6 @@ class Database:
     def __init__(self, db_file=DB_FILE) -> None:
         self.db_file = db_file
         self.connect()
-        pass
 
     def __del__(self):
         self.close()

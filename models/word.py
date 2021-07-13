@@ -1,4 +1,4 @@
-from .db import Database
+from models.db import Database
 import re
 import time
 from collections import Counter
@@ -9,7 +9,6 @@ class Word:
 
     def __init__(self) -> None:
         self.__db = Database()
-        pass
 
     def __del__(self):
         self.__db.close()
