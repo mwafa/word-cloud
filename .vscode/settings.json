@@ -3,5 +3,10 @@
   "[python]": {
     "editor.wordBasedSuggestions": false,
     "editor.defaultFormatter": "ms-python.python"
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
