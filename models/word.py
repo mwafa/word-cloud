@@ -13,8 +13,9 @@ class Word:
     def __del__(self):
         self.__db.close()
 
-    def getAll(self):
-        q = """SELECT word, SUM(weight) as weight FROM word GROUP BY word ORDER BY weight DESC"""
+    def getAll(self, limit=0):
+        limit = "LIMIT %d" % limit if limit else ""
+        q = "SELECT word, SUM(weight) as weight FROM word GROUP BY word ORDER BY weight DESC " + limit
         out = self.__db.query(q)
         return out.fetchall()
 

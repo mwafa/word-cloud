@@ -7,7 +7,8 @@ router = Blueprint("url", __name__, static_url_path="")
 @router.route("/word", methods=["GET"])
 def getWord():
     w = Word()
-    words = w.getAll()
+    limit = request.args.get("limit", 100,  type=int)
+    words = w.getAll(limit)
     return jsonify(
         [{"word": word, "weight": weight} for word, weight in words]
     )

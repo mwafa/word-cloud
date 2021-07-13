@@ -25,27 +25,43 @@
     ></script>
   </head>
   <body>
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 90vh;
+      "
+    >
+      <div id="word-cloud"></div>
+    </div>
     <script>
       function Generate(inputData, max = 50) {
+        const fontSizeScale = d3
+          .scalePow()
+          .exponent(2)
+          .domain([0, 1])
+          .range([5, 100])
+
         const layout = d3.layout
           .cloud()
           .size([800, 500])
           .words(inputData)
           .padding(5)
           .rotate(function () {
-            // return ~~(Math.random() * 2) * 90
+            return ~(Math.random() * -2) * 90
             return 0
           })
           .font("Impact")
           .fontSize(function (d) {
-            return (d.size * 100) / max
+            return fontSizeScale(d.size / max)
           })
           .on("end", draw)
 
         layout.start()
         function draw(words) {
           const scale = d3.scaleOrdinal(d3.schemeCategory10)
-          d3.select("body")
+          d3.select("#word-cloud")
             .append("svg")
             .attr("width", layout.size()[0])
             .attr("height", layout.size()[1])
