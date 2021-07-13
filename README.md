@@ -1,6 +1,6 @@
 # Program Python
 
-Program python untuk: ...
+Program python untuk menyimpan data word cloud.
 
 ## Install Library
 
