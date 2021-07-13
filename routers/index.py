@@ -1,15 +1,7 @@
 from models.word import Word
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_from_directory
 
-router = Blueprint("url", __name__)
-
-
-@router.route("/")
-def main():
-    return jsonify({
-        "error": False,
-        "message": "OK"
-    })
+router = Blueprint("url", __name__, static_url_path="")
 
 
 @router.route("/word", methods=["GET"])
@@ -30,3 +22,13 @@ def postWord():
     return jsonify({
         "message": "OK"
     })
+
+
+@router.route("/")
+def index():
+    return send_from_directory("templates", "index.html")
+
+
+@router.route("/<path:path>")
+def main(path):
+    return send_from_directory('templates', path)

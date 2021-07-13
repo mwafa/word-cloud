@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.0.0/d3.min.js"
+      integrity="sha512-0x7/VCkKLLt4wnkFqI8Cgv6no+AaS1TDgmHLOoU3hy/WVtYta2J6gnOIHhYYDJlDxPqEqAYLPS4gzVex4mGJLw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"
+      integrity="sha512-HjKxWye8lJGPu5q1u/ZYkHlJrJdm6KGr89E6tOrXeKm1mItb1xusPU8QPcKVhP8F9LjpZT7vsu1Fa+dQywP4eg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/d3-scale/0.0.2/scale.min.js"
+      integrity="sha512-HOtWGm6GyVYyQQdtgTHm+lP2oQOxyMbyQIxm0aGjv4jeZB9VSoFlHInwbAHN8S03Tgktmlc6MCosg4Bne6v5RQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body>
+    <script>
+      function Generate(inputData, max = 50) {
+        const layout = d3.layout
+          .cloud()
+          .size([800, 500])
+          .words(inputData)
+          .padding(5)
+          .rotate(function () {
+            // return ~~(Math.random() * 2) * 90
+            return 0
+          })
+          .font("Impact")
+          .fontSize(function (d) {
+            return (d.size * 100) / max
+          })
+          .on("end", draw)
+
+        layout.start()
+        function draw(words) {
+          const scale = d3.scaleOrdinal(d3.schemeCategory10)
+          d3.select("body")
+            .append("svg")
+            .attr("width", layout.size()[0])
+            .attr("height", layout.size()[1])
+            .append("g")
+            .attr(
+              "transform",
+              "translate(" +
+                layout.size()[0] / 2 +
+                "," +
+                layout.size()[1] / 2 +
+                ")"
+            )
+            .selectAll("text")
+            .data(words)
+            .enter()
+            .append("text")
+            .style("font-size", function (d) {
+              return d.size + "px"
+            })
+            .style("fill", (_, i) => {
+              return scale(i)
+            })
+            .style("font-family", "Impact")
+            .attr("text-anchor", "middle")
+            .attr("transform", function (d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"
+            })
+            .text(function (d) {
+              return d.text
+            })
+        }
+      }
+
+      fetch("/word")
+        .then((r) => r.json())
+        .then((data) => {
+          const d = data.map((x) => {
+            return {
+              text: x.word,
+              size: x.weight,
+            }
+          })
+          return d
+        })
+        .then((d) => {
+          const max = d
+            .slice()
+            .map((x) => x.size)
+            .reduce((a, b) => (a > b ? a : b))
+          return { d, max }
+        })
+        .then(({ d, max }) => {
+          console.log(max)
+          Generate(d, max)
+        })
+    </script>
+  </body>
+</html>
